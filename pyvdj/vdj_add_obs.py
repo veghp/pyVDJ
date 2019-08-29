@@ -45,12 +45,33 @@ def add_is_productive(adata):
     return adata
 
 
+def add_chains(adata):
+    obs_col = adata.uns['pyvdj']['obs_col']
+    chains = adata.uns['pyvdj']['df']['chain'].unique()
+    chains = [x for x in chains if str(x) != 'nan']
+    
+    chain_nested_dict = dict()
+    for c in chains:
+        print(c)
+        adata.uns['pyvdj']['df']['chain_' + c] = adata.uns['pyvdj']['df']['chain'] == c
+        has_chain = adata.uns['pyvdj']['df'].groupby('barcode_meta')['chain_' + c].apply(lambda g: any(g))
+        chain_nested_dict[c] = dict(zip(has_chain.index, has_chain))
+
+    for c in chain_nested_dict.keys():
+        adata.obs['vdj_chain_' + c] = adata.obs[obs_col]
+        adata.obs['vdj_chain_' + c][-adata.obs['vdj_has_vdjdata']] = 'No_data'
+        adata.obs['vdj_chain_' + c].replace(to_replace=chain_nested_dict[c], inplace=True)
+
+    return adata
+
+
 def vdj_add_obs(adata, obs = ['has_vdjdata']):
     adder_functions = {
-        "has_vdjdata": add_has_vdjdata,
-        "clonotype": add_clonotype,
-        "is_clone": add_is_clone,
-        "is_productive": add_is_productive}
+        'has_vdjdata': add_has_vdjdata,
+        'clonotype': add_clonotype,
+        'is_clone': add_is_clone,
+        'is_productive': add_is_productive,
+        'chains': add_chains}
 
     for e in obs:
         func = adder_functions[e]

@@ -25,10 +25,6 @@ def vdj_load(paths, samples, adata = None, add_obs = True):
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
 
-    
-#    cat_df = cat_df[['barcode_meta', 'clonotype_meta', 'is_clone']]
-#    cat_df.drop_duplicates(subset=None, keep='first', inplace=True)
-    
 
     vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':'vdj_obs'}
 
