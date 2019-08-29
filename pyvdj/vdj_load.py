@@ -17,7 +17,21 @@ def vdj_load(paths, samples, adata = None, add_obs = True):
         cat_df = pd.concat([cat_df, df], ignore_index=True)
 
 
+    # Productive cells:
+    d = {'True': True, 'False': False, 'None': False}
+    cat_df['productive'] = cat_df['productive'].map(d)
+    is_productive = cat_df.groupby('barcode_meta')['productive'].apply(lambda g: all(g))
+    product_dict = dict(zip(is_productive.index, is_productive))
+    cat_df['productive_all'] = cat_df['barcode_meta']
+    cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
+
+    
+#    cat_df = cat_df[['barcode_meta', 'clonotype_meta', 'is_clone']]
+#    cat_df.drop_duplicates(subset=None, keep='first', inplace=True)
+    
+
     vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':'vdj_obs'}
+
     
     if adata == None:
         return vdj_dict
