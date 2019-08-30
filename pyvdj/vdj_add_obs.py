@@ -50,7 +50,7 @@ def add_chains(adata):
     chains = adata.uns['pyvdj']['df']['chain'].unique()
     chains = [x for x in chains if str(x) != 'nan']
     
-    chain_nested_dict = dict()
+    chain_nested_dict = dict() # for making one .obs column for each chain type
     for c in chains:
         print(c)
         adata.uns['pyvdj']['df']['chain_' + c] = adata.uns['pyvdj']['df']['chain'] == c
@@ -86,6 +86,7 @@ def add_genes(adata):
 
 
 def vdj_add_obs(adata, obs = ['has_vdjdata']):
+    # obs: which of the below metadata to add?
     adder_functions = {
         'has_vdjdata': add_has_vdjdata,
         'clonotype': add_clonotype,

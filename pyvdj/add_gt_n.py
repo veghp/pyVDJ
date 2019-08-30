@@ -15,5 +15,5 @@ def add_gt_n(adata, n):
     adata.obs[newcol][-adata.obs['vdj_has_vdjdata']] = 'No_data' # and this
     adata.obs[newcol].replace(to_replace=clon_dict, inplace=True)
     adata.obs[newcol].unique()
-    
+
     return adata
