@@ -17,6 +17,7 @@ def add_clonotype(adata):
 
     tcr_dict = dict(zip(df['barcode_meta'], df['clonotype_meta']))
     adata.obs['vdj_clonotype'].replace(to_replace=tcr_dict, inplace=True)
+    adata.obs['vdj_clonotype'] = adata.obs['vdj_clonotype'].astype('category')
 
     return adata
 
