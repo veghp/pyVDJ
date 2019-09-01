@@ -29,9 +29,8 @@ def add_gt_n(adata, n):
     adata.obs[newcol] = adata.obs['vdj_clonotype']
     adata.obs[newcol] = adata.obs[newcol].cat.add_categories(['No_data', 'Small'])
 
-    adata.obs[newcol][-adata.obs['vdj_is_clone']] = 'Small' # keep order of this
-    adata.obs[newcol][-adata.obs['vdj_has_vdjdata']] = 'No_data' # and this
+    adata.obs.loc[(-adata.obs['vdj_is_clone']), newcol] = 'Small' # keep order of this
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), newcol] = 'No_data' # and this
     adata.obs[newcol].replace(to_replace=clon_dict, inplace=True)
-    adata.obs[newcol].unique()
 
     return adata

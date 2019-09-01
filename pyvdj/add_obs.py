@@ -31,7 +31,7 @@ def add_clonotype(adata):
 
     adata.obs['vdj_clonotype'] = adata.obs[obs_col]
     # Remove missing ones:
-    adata.obs['vdj_clonotype'][-adata.obs['vdj_has_vdjdata']] = None
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_clonotype'] = None
 
     tcr_dict = dict(zip(df['barcode_meta'], df['clonotype_meta']))
     adata.obs['vdj_clonotype'].replace(to_replace=tcr_dict, inplace=True)
@@ -45,7 +45,7 @@ def add_is_clone(adata):
     df = adata.uns['pyvdj']['df']
 
     adata.obs['vdj_is_clone'] = adata.obs[obs_col]
-    adata.obs['vdj_is_clone'][-adata.obs['vdj_has_vdjdata']] = False
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_is_clone'] = False
     clone_dict = dict(zip(df['barcode_meta'], df['is_clone']))
     adata.obs['vdj_is_clone'].replace(to_replace=clone_dict, inplace=True)
 
@@ -57,7 +57,7 @@ def add_is_productive(adata):
     df = adata.uns['pyvdj']['df']
 
     adata.obs['vdj_is_productive'] = adata.obs[obs_col]
-    adata.obs['vdj_is_productive'][-adata.obs['vdj_has_vdjdata']] = None
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_is_productive'] = None
     prod_dict = dict(zip(df['barcode_meta'], df['productive_all']))
     adata.obs['vdj_is_productive'].replace(to_replace=prod_dict, inplace=True)
 
@@ -78,7 +78,8 @@ def add_chains(adata):
 
     for c in chain_nested_dict.keys():
         adata.obs['vdj_chain_' + c] = adata.obs[obs_col]
-        adata.obs['vdj_chain_' + c][-adata.obs['vdj_has_vdjdata']] = 'No_data'
+        adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_chain_' + c] = 'No_data'
+        
         adata.obs['vdj_chain_' + c].replace(to_replace=chain_nested_dict[c], inplace=True)
 
     return adata
@@ -98,7 +99,7 @@ def add_genes(adata):
 
     for c in constant_genes_nested_dict.keys():
         adata.obs['vdj_constant_' + c] = adata.obs[obs_col]
-        adata.obs['vdj_constant_' + c][-adata.obs['vdj_has_vdjdata']] = 'No_data'
+        adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_constant_' + c] = 'No_data'
         adata.obs['vdj_constant_' + c].replace(to_replace=constant_genes_nested_dict[c], inplace=True)
 
     return adata

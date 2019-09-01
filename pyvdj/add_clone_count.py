@@ -25,7 +25,9 @@ def add_clone_count(adata):
     adata.obs['vdj_clone_count'] = adata.obs['vdj_clonotype']
     adata.obs['vdj_clone_count'].replace(to_replace=clone_count_dict, inplace=True)
 
-    adata.obs['vdj_clone_count'].loc[adata.obs['vdj_is_clone'] == False] = 1 # not a clone of other cells (unique)
-    adata.obs['vdj_clone_count'].loc[adata.obs['vdj_has_vdjdata'] == False] = 0 # no data
+    adata.obs.loc[(adata.obs['vdj_is_clone'] == False), 'vdj_clone_count'] = 1
+      # not a clone of other cells (unique)
+    adata.obs.loc[(adata.obs['vdj_has_vdjdata'] == False), 'vdj_clone_count'] = 0 
+      # no data
 
     return adata
