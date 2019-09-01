@@ -20,7 +20,7 @@ This enables plotting various V(D)J properties and handling mRNA and V(D)J seque
 For a detailed description, see the [tutorial](tutorials/pyVDJ_tutorial.html).
 
 
-## Details
+## Details
 
 The package has 3 main functions that
 * read `metrics_summary.csv` files into a pandas dataframe.
@@ -49,7 +49,7 @@ Arguments:
 * `add_obs`: whether to add some default .obs metadata columns.
 
 
-### Add annotations
+### Add annotations
 
 The `adata.uns['pyvdj']['df']` is a pandas dataframe of the V(D)J data, with two additional columns that contain unique cell barcode and clonotype labels. These are generated using the user-supplied sample names: `cellbarcode + '_' + samplename` and `clonotype + '_' + samplename`.
 
