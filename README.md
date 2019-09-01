@@ -68,7 +68,8 @@ More will be added in the future.
 ### Dependencies
 
 The package has been developed on data prepared with Cell Ranger v2.1.1 (Chemistry: Single Cell V(D)J; V(D)J Reference: GRCh38-alts-ensembl) and has been tested with the following Python package versions:
-pandas 0.24.2
-anndata 0.6.21
-scanpy 1.4.3
+
+    pandas 0.24.2
+    anndata 0.6.21
+    scanpy 1.4.3
 
