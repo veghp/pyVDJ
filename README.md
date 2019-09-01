@@ -17,7 +17,7 @@ This enables plotting various V(D)J properties and handling mRNA and V(D)J seque
     adata = pyvdj.load_vdj(paths, samples, adata)
     adata = pyvdj.vdj_add_obs(adata, obs=['is_clone'])
 
-For a detailed tutorial, see HTML LINK.
+For a detailed description, see the [tutorial](tutorials/pyVDJ_tutorial.html).
 
 
 ## Details
@@ -64,4 +64,11 @@ The `add_obs` function can add the following annotations:
 * `'genes'`: adds a boolean column for each constant gene
 
 More will be added in the future.
+
+### Dependencies
+
+The package has been developed on data prepared with Cell Ranger v2.1.1 (Chemistry: Single Cell V(D)J; V(D)J Reference: GRCh38-alts-ensembl) and has been tested with the following Python package versions:
+pandas 0.24.2
+anndata 0.6.21
+scanpy 1.4.3
 
