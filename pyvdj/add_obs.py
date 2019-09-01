@@ -1,3 +1,21 @@
+# Copyright 2019 Peter Vegh
+#
+# This file is part of pyVDJ.
+#
+# pyVDJ is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# pyVDJ is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with pyVDJ.  If not, see <https://www.gnu.org/licenses/>.
+
+
 def add_has_vdjdata(adata):
     obs_col = adata.uns['pyvdj']['obs_col']
     df = adata.uns['pyvdj']['df']
@@ -50,7 +68,7 @@ def add_chains(adata):
     obs_col = adata.uns['pyvdj']['obs_col']
     chains = adata.uns['pyvdj']['df']['chain'].unique()
     chains = [x for x in chains if str(x) != 'nan']
-    
+
     chain_nested_dict = dict() # for making one .obs column for each chain type
     for c in chains:
         print(c)
@@ -70,18 +88,18 @@ def add_genes(adata):
     obs_col = adata.uns['pyvdj']['obs_col']
     constant_genes = adata.uns['pyvdj']['df']['c_gene'].unique()
     constant_genes = [x for x in constant_genes if str(x) != 'nan']
-    
+
     constant_genes_nested_dict = dict()
     for c in constant_genes:
         print(c)
         adata.uns['pyvdj']['df']['vdj_constant_' + c] = adata.uns['pyvdj']['df']['c_gene'] == c
         has_c_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_constant_' + c].apply(lambda g: any(g))
         constant_genes_nested_dict[c] = dict(zip(has_c_gene.index, has_c_gene))
-    
+
     for c in constant_genes_nested_dict.keys():
         adata.obs['vdj_constant_' + c] = adata.obs[obs_col]
         adata.obs['vdj_constant_' + c][-adata.obs['vdj_has_vdjdata']] = 'No_data'
-        adata.obs['vdj_constant_' + c].replace(to_replace=constant_genes_nested_dict[c], inplace=True)  
+        adata.obs['vdj_constant_' + c].replace(to_replace=constant_genes_nested_dict[c], inplace=True)
 
     return adata
 
@@ -99,5 +117,5 @@ def add_obs(adata, obs = ['has_vdjdata']):
     for e in obs:
         func = adder_functions[e]
         adata = func(adata)
-        
+
     return adata
