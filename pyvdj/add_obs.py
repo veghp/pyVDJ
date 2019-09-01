@@ -86,7 +86,7 @@ def add_genes(adata):
     return adata
 
 
-def vdj_add_obs(adata, obs = ['has_vdjdata']):
+def add_obs(adata, obs = ['has_vdjdata']):
     # obs: which of the below metadata to add?
     adder_functions = {
         'has_vdjdata': add_has_vdjdata,

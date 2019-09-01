@@ -2,7 +2,7 @@ import pandas as pd
 import pyvdj
 
 
-def vdj_load(paths, samples, adata = None, add_obs = True):
+def load_vdj(paths, samples, adata = None, add_obs = True):
     # Loads 10x V(D)J sequencing data into a dictionary containing a dataframe.
     # If anndata specified, returns it with an .uns['pyvdj'] slot, else
     # returns the dictionary.
@@ -40,5 +40,5 @@ def vdj_load(paths, samples, adata = None, add_obs = True):
         adata.uns['pyvdj'] = vdj_dict
 
         if add_obs: # then make a few default metadata columns ('vdj_...')
-            adata = pyvdj.vdj_add_obs(adata, obs = ['has_vdjdata'])
+            adata = pyvdj.add_obs(adata, obs = ['has_vdjdata'])
         return adata

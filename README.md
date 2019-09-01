@@ -55,7 +55,7 @@ The `adata.uns['pyvdj']['df']` is a pandas dataframe of the V(D)J data, with two
 
 These unique cell names are used to match the V(D)J cells to the AnnData `.X` cells, using `adata.obs['vdj_obs']`. The user has to prepare this column using the cell barcodes and the sample names.
 
-The `vdj_add_obs` function can add the following annotations:
+The `add_obs` function can add the following annotations:
 * `'has_vdjdata'`: does the cell have V(D)J sequencing data?
 * `'clonotype'`: add clonotype name
 * `'is_clone'`: does it have a clone?
