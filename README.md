@@ -65,6 +65,16 @@ The `add_obs` function can add the following annotations:
 
 More will be added in the future.
 
+
+### CDR3 specificity
+
+We can retrieve CDR3 amino acid sequences for given clonotypes using
+
+    get_spec(adata, clonotypes = [clonotype1_sampleA', 'clonotype3_sampleB'])
+
+which returns a dictionary. This can be used to find specificity in CDR3 databases, such as [VDJdb](http://vdjdb.cdr3.net).
+
+
 ### Dependencies
 
 The package has been developed on data prepared with Cell Ranger v2.1.1 (Chemistry: Single Cell V(D)J; V(D)J Reference: GRCh38-alts-ensembl) and has been tested with the following Python package versions:
