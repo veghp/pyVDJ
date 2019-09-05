@@ -105,6 +105,23 @@ def add_genes(adata):
     return adata
 
 
+def add_clone_count(adata):
+    # Number of clones in clonotype
+    ## add check of adata.obs['vdj_clonotype']
+    clone_count = adata.obs['vdj_clonotype'].value_counts()
+    clone_count_dict = dict(zip(clone_count.index, clone_count))
+
+    adata.obs['vdj_clone_count'] = adata.obs['vdj_clonotype']
+    adata.obs['vdj_clone_count'].replace(to_replace=clone_count_dict, inplace=True)
+
+    adata.obs.loc[(adata.obs['vdj_is_clone'] == False), 'vdj_clone_count'] = 1
+      # not a clone of other cells (unique)
+    adata.obs.loc[(adata.obs['vdj_has_vdjdata'] == False), 'vdj_clone_count'] = 0 
+      # no data
+
+    return adata
+
+
 def add_obs(adata, obs):
     # obs: list. which of the below metadata to add?
     adder_functions = {
@@ -113,7 +130,9 @@ def add_obs(adata, obs):
         'is_clone': add_is_clone,
         'is_productive': add_is_productive,
         'chains': add_chains,
-        'genes': add_genes}
+        'genes': add_genes,
+        'clone_count': add_clone_count,
+        }
 
     for e in obs:
         func = adder_functions[e]
