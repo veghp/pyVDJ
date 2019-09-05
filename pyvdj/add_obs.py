@@ -105,10 +105,10 @@ def add_genes(adata):
     return adata
 
 
-def add_obs(adata, obs = ['has_vdjdata']):
-    # obs: which of the below metadata to add?
+def add_obs(adata, obs):
+    # obs: list. which of the below metadata to add?
     adder_functions = {
-        'has_vdjdata': add_has_vdjdata,
+        'has_vdjdata': add_has_vdjdata, # load_vdj() adds this by default
         'clonotype': add_clonotype,
         'is_clone': add_is_clone,
         'is_productive': add_is_productive,

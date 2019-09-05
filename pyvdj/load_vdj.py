@@ -20,13 +20,12 @@ import pandas as pd
 import pyvdj
 
 
-def load_vdj(paths, samples, adata = None, add_obs = True):
+def load_vdj(paths, samples, adata = None):
     # Loads 10x V(D)J sequencing data into a dictionary containing a dataframe.
     # If anndata specified, returns it with an .uns['pyvdj'] slot, else
     # returns the dictionary.
     # paths: list of paths to filtered_contig_annotations.csv files
     # samples: dict of path:samplename
-    # add_obs: whether to add some default .obs metadata columns
     cat_df = pd.DataFrame() # contains all V(D)J data
     for f in paths:
         df = pd.read_csv(f)
@@ -56,7 +55,6 @@ def load_vdj(paths, samples, adata = None, add_obs = True):
         return vdj_dict
     else:
         adata.uns['pyvdj'] = vdj_dict
-
-        if add_obs: # then make a few default metadata columns ('vdj_...')
-            adata = pyvdj.add_obs(adata, obs = ['has_vdjdata'])
+        adata = pyvdj.add_obs(adata, obs = ['has_vdjdata'])
+          # needed for making other annotations with add_obs()
         return adata
