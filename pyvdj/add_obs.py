@@ -107,7 +107,11 @@ def add_genes(adata):
 
 def add_clone_count(adata):
     # Number of clones in clonotype
-    ## add check of adata.obs['vdj_clonotype']
+    if 'vdj_clonotype' not in adata.obs.columns:
+        adata = add_clonotype(adata)
+    if 'vdj_is_clone' not in adata.obs.columns:
+        adata = add_is_clone(adata)
+
     clone_count = adata.obs['vdj_clonotype'].value_counts()
     clone_count_dict = dict(zip(clone_count.index, clone_count))
 
