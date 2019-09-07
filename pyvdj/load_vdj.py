@@ -37,6 +37,7 @@ def load_vdj(paths, samples, adata = None):
           # making clonotype labels unique
         df['is_clone'] = ~df['raw_clonotype_id'].isin(['None'])
         df = df.loc[df['is_cell'] == True] # filter step
+        df['sample'] = samples[f] # for subsetting in other functions
 
         cat_df = pd.concat([cat_df, df], ignore_index=True)
 
