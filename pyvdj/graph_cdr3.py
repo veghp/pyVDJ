@@ -16,6 +16,16 @@
 # along with pyVDJ.  If not, see <https://www.gnu.org/licenses/>.
 
 
+try:
+    import numpy as np
+    from Levenshtein import distance
+    from scipy.spatial.distance import pdist, squareform
+except ImportError:
+    has_pkgs = False
+else:
+    has_pkgs = True
+
+
 def get_cdr3(adata):
     df = adata.uns['pyvdj']['df']
     samples = adata.uns['pyvdj']['samples'].values()
@@ -34,3 +44,17 @@ def get_cdr3(adata):
       cdr3_dict[s] = cdr3
 
     return cdr3_dict
+
+
+def get_dist(cdr3_dict, sample):
+    """Requires numpy, scipy and Levenshtein."""
+    if not has_pkgs:
+        raise ImportError("Function requires numpy, scipy and python-Levenshtein packages.")
+
+    cdr3 = cdr3_dict[sample]
+    cdr3 = np.array(cdr3).reshape(-1, 1)
+    dist = pdist(cdr3, lambda x,y: distance(x[0], y[0]))
+
+    dist = (squareform(dist))
+
+    return dist
