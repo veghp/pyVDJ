@@ -25,6 +25,13 @@ except ImportError:
 else:
     has_pkgs = True
 
+try:
+    import igraph
+except ImportError:
+    has_igraph = False
+else:
+    has_igraph = True
+
 
 def get_cdr3(adata):
     df = adata.uns['pyvdj']['df']
@@ -58,3 +65,14 @@ def get_dist(cdr3_dict, sample):
     dist = (squareform(dist))
 
     return dist
+
+
+def graph_cdr3(dist):
+    """Requires igraph."""
+    if not has_igraph:
+        raise ImportError("Function requires the igraph-python package.")
+
+    dist[dist > 1] = 0 # use Levenshtein distance of 1
+    g = igraph.Graph.Adjacency((dist > 0).tolist())
+    
+    return g
