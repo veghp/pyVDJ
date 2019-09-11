@@ -20,13 +20,14 @@ import pandas as pd
 import pyvdj
 
 
-def load_vdj(paths, samples, adata = None):
+def load_vdj(samples, adata = None):
     # Loads 10x V(D)J sequencing data into a dictionary containing a dataframe.
     # If anndata specified, returns it with an .uns['pyvdj'] slot, else
     # returns the dictionary.
-    # paths: list of paths to filtered_contig_annotations.csv files
     # samples: dict of path:samplename
+    # paths point to filtered_contig_annotations.csv files
     cat_df = pd.DataFrame() # contains all V(D)J data
+    paths = list(samples.keys())
     for f in paths:
         df = pd.read_csv(f)
         df['barcode_meta'] = df['barcode'] + "_" + samples[f]
@@ -50,7 +51,7 @@ def load_vdj(paths, samples, adata = None):
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
 
     vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':'vdj_obs'}
-      # for anndata.uns
+      # for adata.uns
 
     if adata == None:
         return vdj_dict
