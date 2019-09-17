@@ -20,12 +20,13 @@ import pandas as pd
 import pyvdj
 
 
-def load_vdj(samples, adata = None):
+def load_vdj(samples, adata = None, obs_col = 'vdj_obs'):
     # Loads 10x V(D)J sequencing data into a dictionary containing a dataframe.
     # If anndata specified, returns it with an .uns['pyvdj'] slot, else
     # returns the dictionary.
     # samples: dict of path:samplename
     # paths point to filtered_contig_annotations.csv files
+    # obs_col: the name of the AnnData
     samples_values = list(samples.values())
     if len(samples_values) != len(set(samples_values)):
         raise ValueError('Samplenames must be unique')
@@ -36,7 +37,7 @@ def load_vdj(samples, adata = None):
         df = pd.read_csv(f)
         df['barcode_meta'] = df['barcode'] + "_" + samples[f]
           # cell names, used for pairing cells in anndata to V(D)J data
-          # values in this will have to match adata.obs['vdj_obs']
+          # values in this will have to match adata.obs[obs_col]
 
         df['clonotype_meta'] = df['raw_clonotype_id'] + "_" + samples[f]
           # making clonotype labels unique
@@ -54,7 +55,7 @@ def load_vdj(samples, adata = None):
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
 
-    vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':'vdj_obs'}
+    vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':obs_col}
       # for adata.uns
 
     if adata == None:
