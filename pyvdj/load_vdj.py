@@ -26,8 +26,12 @@ def load_vdj(samples, adata = None):
     # returns the dictionary.
     # samples: dict of path:samplename
     # paths point to filtered_contig_annotations.csv files
-    cat_df = pd.DataFrame() # contains all V(D)J data
+    samples_values = list(samples.values())
+    if len(samples_values) != len(set(samples_values)):
+        raise ValueError('Samplenames must be unique')
+           # otherwise clonotypes are not assigned properly
     paths = list(samples.keys())
+    cat_df = pd.DataFrame() # df for all V(D)J data
     for f in paths:
         df = pd.read_csv(f)
         df['barcode_meta'] = df['barcode'] + "_" + samples[f]
