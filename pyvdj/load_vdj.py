@@ -20,13 +20,17 @@ import pandas as pd
 import pyvdj
 
 
-def load_vdj(samples, adata = None, obs_col = 'vdj_obs'):
+def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     # Loads 10x V(D)J sequencing data into a dictionary containing a dataframe.
     # If anndata specified, returns it with an .uns['pyvdj'] slot, else
     # returns the dictionary.
     # samples: dict of path:samplename
     # paths point to filtered_contig_annotations.csv files
     # obs_col: the name of the AnnData
+    # cellranger: version of Cellranger (2 or 3) that produced the csv files
+    if cellranger not in (2, 3):
+        raise ValueError('Only Cellranger versions 2 and 3 are supported.')
+
     samples_values = list(samples.values())
     if len(samples_values) != len(set(samples_values)):
         raise ValueError('Samplenames must be unique')
@@ -41,16 +45,25 @@ def load_vdj(samples, adata = None, obs_col = 'vdj_obs'):
 
         df['clonotype_meta'] = df['raw_clonotype_id'] + "_" + samples[f]
           # making clonotype labels unique
-        df['is_clone'] = ~df['raw_clonotype_id'].isin(['None'])
+
+        if cellranger == 2:
+            df['is_clone'] = ~df['raw_clonotype_id'].isin(['None'])
+        if cellranger == 3:
+            pass
+
         df = df.loc[df['is_cell'] == True] # filter step
         df['sample'] = samples[f] # for subsetting in other functions
 
         cat_df = pd.concat([cat_df, df], ignore_index=True)
 
     # Flag as productive cell if all chains are productive:
-    d = {'True': True, 'False': False, 'None': False}
-    cat_df['productive'] = cat_df['productive'].map(d)
-    is_productive = cat_df.groupby('barcode_meta')['productive'].apply(lambda g: all(g))
+    if cat_df['productive'].dtype != bool:
+      # when column in csv contains 'None' it is parsed as str, not boolean
+      d = {'True': True, 'False': False, 'None': False}
+      cat_df['productive'] = cat_df['productive'].map(d)
+
+    is_productive = cat_df.groupby('barcode_meta')['productive'].apply(
+        lambda g: all(g))
     product_dict = dict(zip(is_productive.index, is_productive))
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
