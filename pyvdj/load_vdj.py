@@ -48,8 +48,6 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
 
         if cellranger == 2:
             df['is_clone'] = ~df['raw_clonotype_id'].isin(['None'])
-        if cellranger == 3:
-            pass
 
         df = df.loc[df['is_cell'] == True] # filter step
         df['sample'] = samples[f] # for subsetting in other functions
