@@ -78,13 +78,13 @@ def add_chains(adata):
     for c in chains:
         print(c)
         adata.uns['pyvdj']['df']['chain_' + c] = adata.uns['pyvdj']['df']['chain'] == c
-        has_chain = adata.uns['pyvdj']['df'].groupby('barcode_meta')['chain_' + c].apply(lambda g: any(g))
+        has_chain = adata.uns['pyvdj']['df'].groupby('barcode_meta')['chain_' + c].apply(any)
         chain_nested_dict[c] = dict(zip(has_chain.index, has_chain))
 
     for c in chain_nested_dict.keys():
         adata.obs['vdj_chain_' + c] = adata.obs[obs_col]
         adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_chain_' + c] = 'No_data'
-        
+
         adata.obs['vdj_chain_' + c].replace(to_replace=chain_nested_dict[c], inplace=True)
 
     return adata
@@ -99,7 +99,7 @@ def add_genes(adata):
     for c in constant_genes:
         print(c)
         adata.uns['pyvdj']['df']['vdj_constant_' + c] = adata.uns['pyvdj']['df']['c_gene'] == c
-        has_c_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_constant_' + c].apply(lambda g: any(g))
+        has_c_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_constant_' + c].apply(any)
         constant_genes_nested_dict[c] = dict(zip(has_c_gene.index, has_c_gene))
 
     for c in constant_genes_nested_dict.keys():
@@ -121,7 +121,7 @@ def add_clone_count(adata):
     adata.obs['vdj_clone_count'] = adata.obs['vdj_clonotype']
     adata.obs['vdj_clone_count'].replace(to_replace=clone_count_dict, inplace=True)
 
-    adata.obs.loc[(adata.obs['vdj_has_vdjdata'] == False), 'vdj_clone_count'] = 0 
+    adata.obs.loc[(adata.obs['vdj_has_vdjdata'] == False), 'vdj_clone_count'] = 0
       # no data
 
     return adata

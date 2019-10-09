@@ -60,8 +60,7 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
       d = {'True': True, 'False': False, 'None': False}
       cat_df['productive'] = cat_df['productive'].map(d)
 
-    is_productive = cat_df.groupby('barcode_meta')['productive'].apply(
-        lambda g: all(g))
+    is_productive = cat_df.groupby('barcode_meta')['productive'].apply(all)
     product_dict = dict(zip(is_productive.index, is_productive))
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
