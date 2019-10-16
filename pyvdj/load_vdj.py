@@ -65,7 +65,14 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
 
-    vdj_dict = {'df':cat_df, 'samples':samples, 'obs_col':obs_col}
+    # Anndata bug saves df as ndarray.
+    # We save the column names too so that we can recover df:
+    vdj_dict = {
+        'df':cat_df, 
+        'df_columns':cat_df.columns, 
+        'samples':samples, 
+        'obs_col':obs_col,
+        }
       # for adata.uns
 
     if adata == None:
