@@ -75,10 +75,11 @@ def add_chains(adata):
     chains = [x for x in chains if str(x) != 'nan']
 
     chain_nested_dict = dict() # for making one .obs column for each chain type
+    grouped_cells = adata.uns['pyvdj']['df'].groupby('barcode_meta')
     for c in chains:
         print(c)
         adata.uns['pyvdj']['df']['chain_' + c] = adata.uns['pyvdj']['df']['chain'] == c
-        has_chain = adata.uns['pyvdj']['df'].groupby('barcode_meta')['chain_' + c].apply(any)
+        has_chain = grouped_cells['chain_' + c].apply(any)
         chain_nested_dict[c] = dict(zip(has_chain.index, has_chain))
 
     for c in chain_nested_dict.keys():
@@ -118,10 +119,11 @@ def add_v_genes(adata):
     v_genes = [x for x in v_genes if str(x) != 'nan']
 
     v_genes_nested_dict = dict()
+    grouped_cells = adata.uns['pyvdj']['df'].groupby('barcode_meta')
     for v in v_genes:
         print(v)
         adata.uns['pyvdj']['df']['vdj_v_' + v] = adata.uns['pyvdj']['df']['v_gene'] == v
-        has_v_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_v_' + v].apply(any)
+        has_v_gene = grouped_cells['vdj_v_' + v].apply(any)
         v_genes_nested_dict[v] = dict(zip(has_v_gene.index, has_v_gene))
 
     for v in v_genes_nested_dict.keys():
@@ -138,10 +140,11 @@ def add_j_genes(adata):
     j_genes = [x for x in j_genes if str(x) != 'nan']
 
     j_genes_nested_dict = dict()
+    grouped_cells = adata.uns['pyvdj']['df'].groupby('barcode_meta')
     for j in j_genes:
         print(j)
         adata.uns['pyvdj']['df']['vdj_j_' + j] = adata.uns['pyvdj']['df']['j_gene'] == j
-        has_j_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_j_' + j].apply(any)
+        has_j_gene = grouped_cells['vdj_j_' + j].apply(any)
         j_genes_nested_dict[j] = dict(zip(has_j_gene.index, has_j_gene))
 
     for j in j_genes_nested_dict.keys():
