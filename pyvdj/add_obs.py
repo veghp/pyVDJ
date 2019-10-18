@@ -110,6 +110,26 @@ def add_genes(adata):
     return adata
 
 
+def add_j_genes(adata):
+    obs_col = adata.uns['pyvdj']['obs_col']
+    j_genes = adata.uns['pyvdj']['df']['j_gene'].unique()
+    j_genes = [x for x in j_genes if str(x) != 'nan']
+
+    j_genes_nested_dict = dict()
+    for j in j_genes:
+        print(j)
+        adata.uns['pyvdj']['df']['vdj_j_' + j] = adata.uns['pyvdj']['df']['j_gene'] == j
+        has_j_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_j_' + j].apply(any)
+        j_genes_nested_dict[j] = dict(zip(has_j_gene.index, has_j_gene))
+
+    for j in j_genes_nested_dict.keys():
+        adata.obs['vdj_j_' + j] = adata.obs[obs_col]
+        adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_j_' + j] = 'No_data'
+        adata.obs['vdj_j_' + j].replace(to_replace=j_genes_nested_dict[j], inplace=True)
+
+    return adata
+
+
 def add_clone_count(adata):
     # Number of clones in clonotype
     if 'vdj_clonotype' not in adata.obs.columns:
@@ -131,12 +151,13 @@ def add_clone_count(adata):
 def add_obs(adata, obs):
     # obs: list. which of the below metadata to add?
     adder_functions = {
-        'has_vdjdata': add_has_vdjdata, # load_vdj() adds this by default
+        'has_vdjdata': add_has_vdjdata,  # load_vdj() adds this by default
         'clonotype': add_clonotype,
         'is_clone': add_is_clone,
         'is_productive': add_is_productive,
         'chains': add_chains,
         'genes': add_genes,
+        'j_genes': add_j_genes,
         'clone_count': add_clone_count,
         }
 
