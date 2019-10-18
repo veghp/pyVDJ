@@ -96,13 +96,15 @@ def add_genes(adata):
     constant_genes = [x for x in constant_genes if str(x) != 'nan']
 
     constant_genes_nested_dict = dict()
+    grouped_cells = adata.uns['pyvdj']['df'].groupby('barcode_meta')
     for c in constant_genes:
         print(c)
         adata.uns['pyvdj']['df']['vdj_constant_' + c] = adata.uns['pyvdj']['df']['c_gene'] == c
-        has_c_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_constant_' + c].apply(any)
+        has_c_gene = grouped_cells['vdj_constant_' + c].apply(any)
         constant_genes_nested_dict[c] = dict(zip(has_c_gene.index, has_c_gene))
 
     for c in constant_genes_nested_dict.keys():
+        print('Preparing annotation for %s' % c)
         adata.obs['vdj_constant_' + c] = adata.obs[obs_col]
         adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_constant_' + c] = 'No_data'
         adata.obs['vdj_constant_' + c].replace(to_replace=constant_genes_nested_dict[c], inplace=True)
@@ -177,6 +179,7 @@ def add_obs(adata, obs):
         'is_productive': add_is_productive,
         'chains': add_chains,
         'genes': add_genes,
+        'v_genes': add_v_genes,
         'j_genes': add_j_genes,
         'clone_count': add_clone_count,
         }
