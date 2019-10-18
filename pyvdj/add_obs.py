@@ -110,6 +110,26 @@ def add_genes(adata):
     return adata
 
 
+def add_v_genes(adata):
+    obs_col = adata.uns['pyvdj']['obs_col']
+    v_genes = adata.uns['pyvdj']['df']['v_gene'].unique()
+    v_genes = [x for x in v_genes if str(x) != 'nan']
+
+    v_genes_nested_dict = dict()
+    for v in v_genes:
+        print(v)
+        adata.uns['pyvdj']['df']['vdj_v_' + v] = adata.uns['pyvdj']['df']['v_gene'] == v
+        has_v_gene = adata.uns['pyvdj']['df'].groupby('barcode_meta')['vdj_v_' + v].apply(any)
+        v_genes_nested_dict[v] = dict(zip(has_v_gene.index, has_v_gene))
+
+    for v in v_genes_nested_dict.keys():
+        adata.obs['vdj_v_' + v] = adata.obs[obs_col]
+        adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_v_' + v] = 'No_data'
+        adata.obs['vdj_v_' + v].replace(to_replace=v_genes_nested_dict[v], inplace=True)
+
+    return adata
+
+
 def add_j_genes(adata):
     obs_col = adata.uns['pyvdj']['obs_col']
     j_genes = adata.uns['pyvdj']['df']['j_gene'].unique()
