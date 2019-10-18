@@ -123,6 +123,7 @@ def add_clone_count(adata):
 
     adata.obs.loc[(adata.obs['vdj_has_vdjdata'] == False), 'vdj_clone_count'] = 0
       # no data
+    adata.obs['vdj_clone_count'] = adata.obs['vdj_clone_count'].astype(int)
 
     return adata
 
