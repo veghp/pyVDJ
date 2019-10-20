@@ -21,9 +21,17 @@ from math import log
 
 def shannon(data):
     # Shannon diversity index
-    # 'data':
-
+    # 'data': dictionary of species: count
     N = sum(data.values())
     summa = [ (float(n)/N) * log(float(n)/N) for n in data.values() if n != 0 ]
 
     return -sum(summa)
+
+
+def simpson(data):
+    # Simpson diversity index
+    # 'data': dictionary of species: count
+    N = sum(data.values())
+    summa = [ (float(n)/N)**2 for n in data.values() if n != 0 ]
+
+    return sum(summa)
