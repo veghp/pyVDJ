@@ -3,5 +3,11 @@ from .read10xsummary import read10xsummary
 from .load_vdj import load_vdj
 from .add_obs import add_obs
 from .add_gt_n import add_gt_n
-from .add_clone_count import add_clone_count
 from .get_spec import get_spec
+from .find_clones import find_clones
+from .diversity import shannon
+from .diversity import simpson
+from .stats import stats
+from .graph_cdr3 import get_cdr3
+from .graph_cdr3 import get_dist
+from .graph_cdr3 import graph_cdr3
