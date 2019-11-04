@@ -41,18 +41,9 @@ def add_clonotype(adata):
 
 
 def add_is_clone(adata):
-    obs_col = adata.uns['pyvdj']['obs_col']
-    df = adata.uns['pyvdj']['df']
-
-    if 'is_clone' in df.columns:
-        adata.obs['vdj_is_clone'] = adata.obs[obs_col]
-        adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_is_clone'] = False
-        clone_dict = dict(zip(df['barcode_meta'], df['is_clone']))
-        adata.obs['vdj_is_clone'].replace(to_replace=clone_dict, inplace=True)
-    else:
-        if 'vdj_clone_count' not in adata.obs.columns:
-            adata = add_clone_count(adata)
-        adata.obs['vdj_is_clone'] = adata.obs['vdj_clone_count'] > 1
+    if 'vdj_clone_count' not in adata.obs.columns:
+        adata = add_clone_count(adata)
+    adata.obs['vdj_is_clone'] = adata.obs['vdj_clone_count'] > 1
 
     return adata
 

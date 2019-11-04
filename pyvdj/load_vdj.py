@@ -16,6 +16,7 @@
 # along with pyVDJ.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import numpy as np
 import pandas as pd
 import pyvdj
 
@@ -29,7 +30,7 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     # obs_col: the name of the AnnData
     # cellranger: version of Cellranger (2 or 3) that produced the csv files
     if cellranger not in (2, 3):
-        raise ValueError('Only Cellranger versions 2 and 3 are supported.')
+        raise ValueError('Only Cellranger version 2 and 3 are supported.')
 
     samples_values = list(samples.values())
     if len(samples_values) != len(set(samples_values)):
@@ -43,11 +44,10 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
           # cell names, used for pairing cells in anndata to V(D)J data
           # values in this will have to match adata.obs[obs_col]
 
-        df['clonotype_meta'] = df['raw_clonotype_id'] + "_" + samples[f]
-          # making clonotype labels unique
-
         if cellranger == 2:
-            df['is_clone'] = ~df['raw_clonotype_id'].isin(['None'])
+            df['clonotype_replaced'] = np.where(df['raw_clonotype_id'] == 'None', df['barcode_meta'], df['raw_clonotype_id'])
+            df['clonotype_meta'] = df['clonotype_replaced'] + "_" + samples[f]
+              # Replacing 'None' clonotype labels with cell name
 
         df = df.loc[df['is_cell'] == True] # filter step
         df['sample'] = samples[f] # for subsetting in other functions
@@ -56,7 +56,8 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
 
     # Flag as productive cell if all chains are productive:
     if cat_df['productive'].dtype != bool:
-      # when column in csv contains 'None' it is parsed as str, not boolean
+      # In Cellranger v2 data, column in csv file contains 'None' and it is
+      # parsed as str, not boolean.
       d = {'True': True, 'False': False, 'None': False}
       cat_df['productive'] = cat_df['productive'].map(d)
 
@@ -68,9 +69,9 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     # Anndata bug saves df as ndarray.
     # We save the column names too so that we can recover df:
     vdj_dict = {
-        'df':cat_df, 
-        'df_columns':cat_df.columns, 
-        'samples':samples, 
+        'df':cat_df,
+        'df_columns':cat_df.columns,
+        'samples':samples,
         'obs_col':obs_col,
         }
       # for adata.uns
