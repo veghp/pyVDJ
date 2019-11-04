@@ -8,7 +8,11 @@ This enables plotting various V(D)J properties and handling mRNA (GEX) and V(D)J
 
 ## Install
 
-`pip3 install pyvdj`
+`pip install pyvdj`
+
+Install the latest version from Github:
+
+`pip install git+https://github.com/veghp/pyVDJ.git`
 
 
 ## Usage
@@ -36,9 +40,9 @@ The `read10xsummary` function requires a list of paths to `metrics_summary.csv` 
 ### Load V(D)J data
 
 The `load_vdj` function loads 10x V(D)J sequencing data (`filtered_contig_annotations.csv` files) into an AnnData object's `.uns['pyvdj']` slot, and returns the object. The `adata.uns['pyvdj']` slot is a dictionary which has the following elements:
-* `'df'`: a dataframe containing V(D)J data
+* `'df'`: a dataframe containing V(D)J data.
 * `'obs_col'`: the `anndata.obs` columname of matching cellnames.
-* `'samples'`: a dictionary of filename:samplename
+* `'samples'`: a dictionary of filename:samplename.
 
 If an anndata object is not supplied, the function returns the dictionary.
 
@@ -59,7 +63,8 @@ The `add_obs` function can add the following annotations:
 * `'has_vdjdata'`: does the cell have V(D)J sequencing data?
 * `'clonotype'`: add clonotype name
 * `'is_clone'`: does it have a clone?
-* `'is_productive'`: are all chains productive?
+* `'all_productive'`: are all chains productive?
+* `'any_productive'`: any of the chains productive?
 * `'chains'`: adds annotation (True, False, No_data) for each chain
 * `'genes'`: adds annotation (True, False, No_data) for each constant gene
 * `'v_genes'`: adds annotation (True, False, No_data) for each variable gene
@@ -84,7 +89,7 @@ _The above definitions are understood in the context of the sequenced cells._
 
 ### CDR3 specificity
 
-We can retrieve CDR3 amino acid sequences for given clonotypes using
+We can [retrieve CDR3 amino acid sequences](tutorials/pyVDJ_tutorial.html) for given clonotypes using
 
     pyvdj.get_spec(adata, clonotypes = [clonotype1_sampleA', 'clonotype3_sampleB'])
 
@@ -126,6 +131,13 @@ A set of prototype functions build CDR3-similarity graphs using [Levenshtein dis
     g = pyvdj.graph_cdr3(dist)  # returns an igraph graph object.
 
 This requires the python-Levenshtein and the igraph-python packages.
+
+
+### License
+
+pyVDJ is [free software](https://www.gnu.org/philosophy/free-sw.en.html), which means the users have the freedom to run, copy, distribute, study, change and improve the software.
+
+For more on this, see the [Free Software Foundation](https://www.fsf.org) website.
 
 
 ### Dependencies
