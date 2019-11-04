@@ -66,6 +66,12 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     cat_df['productive_all'] = cat_df['barcode_meta']
     cat_df['productive_all'].replace(to_replace=product_dict, inplace=True)
 
+    # Flag as unproductive cell if no chains are productive:
+    any_productive = cat_df.groupby('barcode_meta')['productive'].apply(any)
+    product_dict = dict(zip(any_productive.index, any_productive))
+    cat_df['productive_any'] = cat_df['barcode_meta']
+    cat_df['productive_any'].replace(to_replace=product_dict, inplace=True)
+
     # Anndata bug saves df as ndarray.
     # We save the column names too so that we can recover df:
     vdj_dict = {

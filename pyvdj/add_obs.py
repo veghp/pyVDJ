@@ -48,14 +48,26 @@ def add_is_clone(adata):
     return adata
 
 
-def add_is_productive(adata):
+def add_all_productive(adata):
     obs_col = adata.uns['pyvdj']['obs_col']
     df = adata.uns['pyvdj']['df']
 
-    adata.obs['vdj_is_productive'] = adata.obs[obs_col]
-    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_is_productive'] = None
+    adata.obs['vdj_all_productive'] = adata.obs[obs_col]
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_all_productive'] = None
     prod_dict = dict(zip(df['barcode_meta'], df['productive_all']))
-    adata.obs['vdj_is_productive'].replace(to_replace=prod_dict, inplace=True)
+    adata.obs['vdj_all_productive'].replace(to_replace=prod_dict, inplace=True)
+
+    return adata
+
+
+def add_any_productive(adata):
+    obs_col = adata.uns['pyvdj']['obs_col']
+    df = adata.uns['pyvdj']['df']
+
+    adata.obs['vdj_any_productive'] = adata.obs[obs_col]
+    adata.obs.loc[(-adata.obs['vdj_has_vdjdata']), 'vdj_any_productive'] = None
+    prod_dict = dict(zip(df['barcode_meta'], df['productive_any']))
+    adata.obs['vdj_any_productive'].replace(to_replace=prod_dict, inplace=True)
 
     return adata
 
@@ -170,7 +182,8 @@ def add_obs(adata, obs):
         'has_vdjdata': add_has_vdjdata,  # load_vdj() adds this by default
         'clonotype': add_clonotype,
         'is_clone': add_is_clone,
-        'is_productive': add_is_productive,
+        'all_productive': add_all_productive,
+        'any_productive': add_any_productive,
         'chains': add_chains,
         'genes': add_genes,
         'v_genes': add_v_genes,
