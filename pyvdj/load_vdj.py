@@ -48,6 +48,8 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
             df['clonotype_replaced'] = np.where(df['raw_clonotype_id'] == 'None', df['barcode_meta'], df['raw_clonotype_id'])
             df['clonotype_meta'] = df['clonotype_replaced'] + "_" + samples[f]
               # Replacing 'None' clonotype labels with cell name
+        elif cellranger == 3:
+            df['clonotype_meta'] = df['raw_clonotype_id'] + "_" + samples[f]
 
         df = df.loc[df['is_cell'] == True] # filter step
         df['sample'] = samples[f] # for subsetting in other functions
