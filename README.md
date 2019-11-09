@@ -84,6 +84,7 @@ The `add_obs` function can add the following annotations:
 _The above definitions are understood in the context of the sequenced cells._
 
 *As determined by Cell Ranger.
+
 **Note that Cell Ranger v2 does not assign a clonotype id to clonotypes with only 1 clone, but uses ‘None’. Cell Ranger v3 does assign a clonotype id to all cells.
 
 
@@ -131,6 +132,11 @@ A set of prototype functions build CDR3-similarity graphs using [Levenshtein dis
     g = pyvdj.graph_cdr3(dist)  # returns an igraph graph object.
 
 This requires the python-Levenshtein and the igraph-python packages.
+
+
+### Versions
+
+The pyVDJ project uses the [semantic versioning](https://semver.org) scheme. The latest release is [v0.1.2](https://github.com/veghp/pyVDJ/releases).
 
 
 ### License

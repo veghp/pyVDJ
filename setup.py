@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='pyvdj',
-    version='0.1.1',
+    version='0.1.2',
     author='Peter Vegh',
     author_email='peter.vegh@newcastle.ac.uk',
     description='V(D)J sequencing data analysis',
