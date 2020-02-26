@@ -18,7 +18,7 @@ Install the latest version from Github:
 ## Usage
 
     import pyvdj
-    adata = pyvdj.load_vdj(paths, samples, adata)
+    adata = pyvdj.load_vdj(samples, adata)
     adata = pyvdj.add_obs(adata, obs=['is_clone'])
 
 For a detailed description, see the [tutorial](tutorials/pyVDJ_tutorial.html).
@@ -47,11 +47,10 @@ The `load_vdj` function loads 10x V(D)J sequencing data (`filtered_contig_annota
 If an anndata object is not supplied, the function returns the dictionary.
 
 Arguments:
-* `paths`: list of paths to filtered_contig_annotations.csv files.
-* `samples`: a dictionary of path:samplename.
+* `samples`: a dictionary of 'path/to/filtered_contig_annotations.csv': 'samplename'.
 * `adata`: the AnnData object.
-* `add_obs`: whether to add some default .obs metadata columns.
-
+* `obs_col='vdj_obs'`: specifies the adata annotation column for unique cellnames.
+* `cellranger=3`: version of Cellranger (2 or 3) that produced the csv files
 
 ### Add annotations
 
