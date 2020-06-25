@@ -78,13 +78,13 @@ def load_vdj(samples, adata=None, obs_col='vdj_obs', cellranger=3):
     # We save the column names too so that we can recover df:
     vdj_dict = {
         'df':cat_df,
-        'df_columns':cat_df.columns,
+        'df_columns':cat_df.columns.tolist(),
         'samples':samples,
         'obs_col':obs_col,
         }
       # for adata.uns
 
-    if adata == None:
+    if adata is None:
         return vdj_dict
     else:
         adata.uns['pyvdj'] = vdj_dict
