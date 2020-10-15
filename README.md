@@ -1,5 +1,10 @@
 # pyVDJ
 
+![project unmaintained](https://img.shields.io/badge/project-unmaintained-red.svg)
+
+_**Note**: this project is unmaintained. Feel free to fork it or re-use any part of it (license: GPLv3). Alternatives to this program are [scirpy](https://icbi-lab.github.io/scirpy/) and [Immunarch](https://immunarch.com)._
+
+
 V(D)J sequencing data analysis
 
 This package adds 10x Genomics V(D)J sequencing data to an [AnnData](https://anndata.readthedocs.io) object's `.uns` part, and also makes annotation columns in `.obs`.
